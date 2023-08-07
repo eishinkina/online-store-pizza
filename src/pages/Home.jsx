@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
+import { SearchContext } from "../App";
 
-const Home = ({ searchValue }) => {
+const Home = () => {
+  const {searchValue} = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsloading] = useState(true);
   const [categoryId, setCategoryId] = useState(0);
@@ -14,7 +16,7 @@ const Home = ({ searchValue }) => {
     name: "популярности",
     sortProperty: "rating",
   });
-  const [currenPage, setCurrenPage] = useState(1)
+  const [currenPage, setCurrenPage] = useState(1);
   const order = sort.sortProperty.includes("-") ? "asc" : "desc";
   const sortBy = sort.sortProperty.replace("-", "");
   const category = categoryId > 0 ? `category=${categoryId}` : "";
@@ -49,7 +51,7 @@ const Home = ({ searchValue }) => {
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
-      <Pagination onChangePage={number => setCurrenPage(number)}/>
+      <Pagination onChangePage={(number) => setCurrenPage(number)} />
     </div>
   );
 };
