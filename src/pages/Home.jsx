@@ -1,5 +1,8 @@
 import React, { useContext } from "react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategoryId } from "../redux/slices/filterSlice";
+
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
@@ -8,17 +11,19 @@ import Pagination from "../components/Pagination/Pagination";
 import { SearchContext } from "../App";
 
 const Home = () => {
-  const {searchValue} = useContext(SearchContext);
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const onChangeCategory = (id) => {
+    dispatch(setCategoryId(id));
+  };
+  const sortType = useSelector((state) => state.filter.sort.sortProperty);
+
+  const { searchValue } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsloading] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
-  const [sort, setSort] = useState({
-    name: "популярности",
-    sortProperty: "rating",
-  });
   const [currenPage, setCurrenPage] = useState(1);
-  const order = sort.sortProperty.includes("-") ? "asc" : "desc";
-  const sortBy = sort.sortProperty.replace("-", "");
+  const order = sortType.includes("-") ? "asc" : "desc";
+  const sortBy = sortType.replace("-", "");
   const category = categoryId > 0 ? `category=${categoryId}` : "";
   const search = searchValue ? `&search=${searchValue}` : "";
   useEffect(() => {
@@ -34,7 +39,7 @@ const Home = () => {
         setIsloading(false);
       });
     window.scrollTo(0, 0);
-  }, [categoryId, sort, searchValue, currenPage]);
+  }, [categoryId, sortType, searchValue, currenPage]);
 
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, index) => (
@@ -43,11 +48,8 @@ const Home = () => {
   return (
     <div className="container">
       <div className="content__top">
-        <Categories
-          value={categoryId}
-          onClickCategoryProp={(i) => setCategoryId(i)}
-        />
-        <Sort sortValue={sort} onClickSortProp={(index) => setSort(index)} />
+        <Categories value={categoryId} onClickCategoryProp={onChangeCategory} />
+        <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">{isLoading ? skeletons : pizzas}</div>
