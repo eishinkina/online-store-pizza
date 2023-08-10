@@ -2,13 +2,14 @@ import React, { useContext } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setCategoryId } from "../redux/slices/filterSlice";
+import { SearchContext } from "../App";
+import axios from "axios";
 
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock/PizzaBlock";
 import Pagination from "../components/Pagination/Pagination";
-import { SearchContext } from "../App";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -28,14 +29,12 @@ const Home = () => {
   const search = searchValue ? `&search=${searchValue}` : "";
   useEffect(() => {
     setIsloading(true);
-    fetch(
-      `https://644a82c6a8370fb32150d170.mockapi.io/items?page=${currenPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-    )
+    axios
+      .get(
+        `https://644a82c6a8370fb32150d170.mockapi.io/items?page=${currenPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
+      )
       .then((res) => {
-        return res.json();
-      })
-      .then((json) => {
-        setItems(json);
+        setItems(res.data);
         setIsloading(false);
       });
     window.scrollTo(0, 0);
