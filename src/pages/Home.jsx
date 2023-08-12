@@ -53,20 +53,24 @@ const Home = () => {
     }
   }, []);
 
-  const fetchPizzas = () => {
+  const fetchPizzas = async () => {
     const order = sortType.includes("-") ? "asc" : "desc";
     const sortBy = sortType.replace("-", "");
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `&search=${searchValue}` : "";
     setIsloading(true);
-    axios
-      .get(
+    try {
+      const res = await axios.get(
         `https://644a82c6a8370fb32150d170.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsloading(false);
-      });
+      );
+      setItems(res.data);
+      setIsloading(false);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsloading(false);
+    }
+
     window.scrollTo(0, 0);
   };
 
