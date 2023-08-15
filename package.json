@@ -2,7 +2,10 @@
   "name": "pizza",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://eishinkina.github.io/online-store-pizza",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
@@ -21,6 +24,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
+    "gh-pages": "^6.0.0",
     "lodash.debounce": "^4.0.8",
     "qs": "^6.11.2",
     "react": "^18.2.0",
